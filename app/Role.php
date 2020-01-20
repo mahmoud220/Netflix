@@ -15,7 +15,7 @@ class Role extends LaratrustRole
         });
     }
 
-    public function scopeWhenRoleNot($query, $role_name){
+    public function scopeWhereRoleNot($query, $role_name){
         return $query->whereNotIn('name', (array)$role_name);
     }
 }

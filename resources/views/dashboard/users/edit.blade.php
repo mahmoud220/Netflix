@@ -22,39 +22,18 @@
                   </div>
 
                   <div class="form-group">
-                      <h4 style="font-weight: 400;">Permissions</h4>
-                      <table class="table table-hover">
-                          <thead>
-                              <tr>
-                                  <th style="width: 5%;">#</th>
-                                  <th style="width: 15%;">Model</th>
-                                  <th>Permissions</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              @php
-                                 $models = ['categories', 'users'];
-                              @endphp
-                              @foreach ($models as $index=>$model)
-                              <tr>
-                                  <td>{{ $index+1 }}</td>
-                                  <td>{{ $model }}</td>
-                                  <td>
-                                      @php
-                                       $permission_maps = ['create', 'read', 'update', 'delete'];
-                                      @endphp
+                    <label>Email</label>
+                <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}">
+                </div>
 
-                                  <select name="permissions[]" class="form-control select2" multiple>
-                                      @foreach ($permission_maps as $permission_map)
-                                  <option value="{{ $permission_map . '_' . $model }}" {{$user->hasPermission($permission_map . '_' . $model) ? 'selected' : ''}}>{{ $permission_map }}</option>
-                                      @endforeach
-                                  </select>
-                                  </td>
-                              </tr>
-                              @endforeach
-                          </tbody>
-                      </table>
-                  </div>
+                <div class="form-group">
+                    <label></label>
+                    <select name="role_id" class="form-control">
+                        @foreach($roles as $role)
+                    <option value="{{ $role->id }}{{ $user->hasRole($role->name) ? 'selected' : '' }}">{{ $role->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
                   <div class="form-group">
                       <button type="submit" class="btn btn-primary"><i class="fa fa-edit"></i> Edit</button>

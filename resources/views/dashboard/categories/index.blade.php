@@ -23,7 +23,11 @@
                       </div>
                       <div class="col-4">
                           <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+                      @if(auth()->user()->hasPermission('create_categories'))
                       <a href="{{ route('dashboard.categories.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i> Add</a>
+                      @else
+                      <a href="#" disabled class="btn btn-primary"><i class="fa fa-plus"></i> Add</a>
+                      @endif
                       </div>
                   </div>
               </form>
@@ -48,12 +52,21 @@
                     <td>{{ $index+1 }}</td>
                     <td>{{ $category->name }}</td>
                     <td>
+                        @if(auth()->user()->hasPermission('update_categories'))
                     <a href="{{ route('dashboard.categories.edit', $category->id) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
+                    @else
+                    <a href="#" disabled class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
+                    @endif
+                    @if(auth()->user()->hasPermission('delete_categories'))
                     <form method="post" action="{{ route('dashboard.categories.destroy', $category->id) }}" style="display:inline-block">
                       @csrf
                       @method('delete')
 
                       <button type="submit" class="btn btn-danger btn-sm delete"><i class="fa fa-trash"></i> Delete</button>
+                    </form>
+                    @else
+                    <a href="#" disabled class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> Delete</a>
+                    @endif
                     </td>
                     </tr>
                     @endforeach

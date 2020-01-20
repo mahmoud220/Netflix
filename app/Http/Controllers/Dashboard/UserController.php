@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\User;
+use App\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -13,10 +14,20 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        $this->middleware('permission:read_users')->only(['index']);
+        $this->middleware('permission:create_users')->only(['create', 'store']);
+        $this->middleware('permission:update_users')->only(['edit', 'update']);
+        $this->middleware('permission:delete_users')->only(['destroy']);
+    }
+
     public function index()
     {
-        $users = User::paginate(5);
-        return view('dashboard.users.index', compact('users'));
+        $roles = Role::whereRoleNot('super_admin')->get();
+        $users = User::whereRoleNot('super_admin')->whenSearch(request()->search)->whenRole(request()->role_id)->with('roles')->paginate(5);
+        return view('dashboard.users.index', compact('roles', 'users'));
     }
 
     /**
@@ -26,7 +37,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('dashboard.users.create');
+        $roles = Role::whereRoleNot(['super_admin', 'admin'])->get();
+        return view('dashboard.users.create', compact('roles'));
     }
 
     /**
@@ -38,12 +50,16 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|unique:users,name',
-            'permissions' => 'required|array|min:1',
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|confirmed',
+            'role_id' => 'required|numeric',
             ]);
 
+            $request->merge(['password' => bcrypt($request->password)]);
+
             $user = User::create($request->all());
-            $user->attachPermissions($request->permissions);
+            $user->attachRoles(['admin', $request->role_id]);
             session()->flash('success', 'Data added successfully');
             return redirect()->route('dashboard.users.index');
     }
@@ -65,9 +81,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(user $User)
+    public function edit(user $user)
     {
-        return view('dashboard.users.edit', compact('user'));
+        $roles = Role::whereRoleNot(['super_admin', 'admin'])->get();
+        return view('dashboard.users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -80,12 +97,13 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $request->validate([
-            'name' => 'required|unique:users,name,' . $user->id,
-            'permissions' => 'required|array|min:1',
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'role_id' => 'required|numeric',
             ]);
 
             $user->update($request->all());
-            $user->syncPermissions($request->permissions);
+            $user->syncRoles(['admin', $request->role_id]);
             session()->flash('success', 'Data updated successfully');
             return redirect()->route('dashboard.users.index');
     }

@@ -13,6 +13,15 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     public function __construct()
+     {
+         $this->middleware('permission:read_categories')->only(['index']);
+         $this->middleware('permission:create_categories')->only(['create', 'store']);
+         $this->middleware('permission:update_categories')->only(['edit', 'update']);
+         $this->middleware('permission:delete_categories')->only(['destroy']);
+     }
+
     public function index()
     {
         $categories = Category::whenSearch(request()->search)->paginate(5);
