@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Main CSS-->
   <link rel="stylesheet" type="text/css" href="{{asset('dashboard_files/css/main.css')}}">
+
+  <script src="{{asset('dashboard_files/js/jquery-3.3.1.min.js')}}"></script>
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{{asset('dashboard_files/plugins/noty/noty.css')}}">
@@ -38,9 +40,9 @@
       @yield('content')
     </main>
     <!-- Essential javascripts for application to work-->
-<script src="{{asset('dashboard_files/js/jquery-3.3.1.min.js')}}"></script>
     <script src="{{asset('dashboard_files/js/popper.min.js')}}"></script>
     <script src="{{asset('dashboard_files/js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('dashboard_files/plugins/select2/select2.min.js')}}"></script>
     <script src="{{asset('dashboard_files/js/main.js')}}"></script>
     <script>
         $(document).ready(function() {
@@ -62,7 +64,12 @@
                 });
                 n.show();
             });
+
+
         });
+        $('.select2').select2({
+                width: '100%'
+            });
     </script>
   </body>
 </html>

@@ -1,12 +1,12 @@
 @extends('layouts.dashboard.app')
 @section('content')
 <div>
-<h2>Categories</h2>
+<h2>User</h2>
 </div>
 
         <ul class="breadcrumb">
           <li class="breadcrumb-item"><a href="{{route('dashboard.welcome')}}">Dashboard</a></li>
-          <li class="breadcrumb-item active">Categories</li>
+          <li class="breadcrumb-item active">Users</li>
           {{-- <li class="breadcrumb-item active">Data</li> --}}
         </ul>
 
@@ -23,7 +23,7 @@
                       </div>
                       <div class="col-4">
                           <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
-                      <a href="{{ route('dashboard.categories.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i> Add</a>
+                      <a href="{{ route('dashboard.users.create') }}" class="btn btn-primary"><i class="fa fa-plus"></i> Add</a>
                       </div>
                   </div>
               </form>
@@ -33,23 +33,27 @@
 
       <div class="row">
           <div class="col-md-12">
-              @if($categories->count() > 0)
+              @if($users->count() > 0)
               <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($categories as $index=>$category)
+                    @foreach($users as $index=>$user)
                     <tr>
                     <td>{{ $index+1 }}</td>
-                    <td>{{ $category->name }}</td>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ implode(', ', $user->roles->pluck('name')->toArray()) }}</td>
                     <td>
-                    <a href="{{ route('dashboard.categories.edit', $category->id) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
-                    <form method="post" action="{{ route('dashboard.categories.destroy', $category->id) }}" style="display:inline-block">
+                    <a href="{{ route('dashboard.users.edit', $user->id) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
+                    <form method="post" action="{{ route('dashboard.users.destroy', $user->id) }}" style="display:inline-block">
                       @csrf
                       @method('delete')
 
@@ -59,7 +63,7 @@
                     @endforeach
                 </tbody>
             </table>
-            {{ $categories->appends(request()->query())->links() }}
+            {{ $users->appends(request()->query())->links() }}
             @else
             <h3 style="font-weight:400;">Sorry! No Records Found</h3>
               @endif
