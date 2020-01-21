@@ -13,6 +13,10 @@
   <li><a class="app-menu__item" href="{{route('dashboard.categories.index')}}"><i class="app-menu__icon fa fa-list"></i><span class="app-menu__label">Categories</span></a></li>
   @endif
 
+  @if(auth()->user()->hasPermission('read_movies'))
+  <li><a class="app-menu__item" href="{{route('dashboard.movies.index')}}"><i class="app-menu__icon fa fa-users"></i><span class="app-menu__label">Movies</span></a></li>
+  @endif
+
   @if(auth()->user()->hasPermission('read_roles'))
   <li><a class="app-menu__item" href="{{route('dashboard.roles.index')}}"><i class="app-menu__icon fa fa-anchor"></i><span class="app-menu__label">Roles</span></a></li>
   @endif

@@ -15,6 +15,7 @@
         "laravel/framework": "^6.2",
         "laravel/socialite": "^4.3",
         "laravel/tinker": "^2.0",
+        "pbmedia/laravel-ffmpeg": "^5.0",
         "santigarcor/laratrust": "5.2.*"
     },
     "require-dev": {
