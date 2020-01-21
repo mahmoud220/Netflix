@@ -20,6 +20,15 @@
   @if(auth()->user()->hasPermission('read_users'))
   <li><a class="app-menu__item" href="{{route('dashboard.users.index')}}"><i class="app-menu__icon fa fa-users"></i><span class="app-menu__label">User</span></a></li>
   @endif
+
+  @if(auth()->user()->hasPermission('read_settings'))
+  <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-gear"></i><span class="app-menu__label">Settings</span><i class="treeview-indicator fa fa-angle-right"></i></a>
+      <ul class="treeview-menu">
+      <li><a class="treeview-item" href="{{ route('dashboard.settings.social_login') }}"><i class="icon fa fa-circle-o"></i> Social Login </a></li>
+      <li><a class="treeview-item" href="{{ route('dashboard.settings.social_links') }}"><i class="icon fa fa-circle-o"></i> Social Links </a></li>
+      </ul>
+    </li>
+  @endif
     {{-- <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">UI Elements</span><i class="treeview-indicator fa fa-angle-right"></i></a>
       <ul class="treeview-menu">
         <li><a class="treeview-item" href="bootstrap-components.html"><i class="icon fa fa-circle-o"></i> Bootstrap Elements</a></li>

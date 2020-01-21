@@ -6,6 +6,7 @@ return [
             'users' => 'c,r,u,d',
             'categories' => 'c,r,u,d',
             'roles' => 'c,r,u,d',
+            'settings' => 'c,r,u,d',
         ],
         'admin' => [],
         'user' => [],
