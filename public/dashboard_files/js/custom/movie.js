@@ -23,8 +23,28 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             cache: false,
-            success: function(movie) {
+            success: function(movieBeforeProcessing) {
+                var interval = setInterval(function(){
 
+                    $.ajax({
+                        url: `/dashboard/movies/${movieBeforeProcessing.id}`,
+                        method: 'GET',
+                        success: function (movieWhileProcessing) {
+
+                            $('#movie__upload-status').html('Processing');
+                            $('#movie__upload-progress').css('width', movieWhileProcessing.percent + '%');
+                            $('#movie__upload-progress').html(movieWhileProcessing.percent + '%');
+
+                            if (movieWhileProcessing.percent == 100) {
+                                clearInterval(interval); //break interval
+                                $('#movie__upload-status').html('Done Processing');
+                                $('#movie__upload-progress').parent().css('display', 'none');
+                                $('#movie__submit-btn').css('display', 'block');
+                            }
+                        },
+                    });//end of ajax call
+
+                }, 3000);
             },
 
             xhr: function() {

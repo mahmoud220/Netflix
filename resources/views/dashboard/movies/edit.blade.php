@@ -1,65 +1,93 @@
 @extends('layouts.dashboard.app')
+
 @section('content')
-<div>
-<h2>Movies</h2>
-</div>
-        <ul class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{{route('dashboard.welcome')}}">Dashboard</a></li>
-          <li class="breadcrumb-item"><a href="{{route('dashboard.movies.index')}}">Movies</a></li>
-          <li class="breadcrumb-item active">Edit</li>
-        </ul>
 
-      <div class="row">
-          <div class="col-md-12">
-            <div class="tile mb-4">
-                <form method="post" action="{{ route('dashboard.movies.update', $movie->id) }}">
-                  @csrf
-                  @method('put')
-                  @include('dashboard.partials._errors')
-                  <div class="form-group">
-                      <label>Name</label>
-                  <input type="text" name="name" class="form-control" value="{{ old('name', $movie->name) }}">
-                  </div>
+    <div>
+        <h2>Movies</h2>
+    </div>
 
-                  <div class="form-group">
-                      <h4 style="font-weight: 400;">Permissions</h4>
-                      <table class="table table-hover">
-                          <thead>
-                              <tr>
-                                  <th style="width: 5%;">#</th>
-                                  <th style="width: 15%;">Model</th>
-                                  <th>Permissions</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              @php
-                                 $models = ['categories', 'users'];
-                              @endphp
-                              @foreach ($models as $index=>$model)
-                              <tr>
-                                  <td>{{ $index+1 }}</td>
-                                  <td>{{ $model }}</td>
-                                  <td>
-                                      @php
-                                       $permission_maps = ['create', 'read', 'update', 'delete'];
-                                      @endphp
+    <ul class="breadcrumb mt-2">
+        <li class="breadcrumb-item"><a href="{{ route('dashboard.welcome') }}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('dashboard.movies.index') }}">Movies</a></li>
+        <li class="breadcrumb-item active">Edit</li>
+    </ul>
 
-                                  <select name="permissions[]" class="form-control select2" multiple>
-                                      @foreach ($permission_maps as $permission_map)
-                                  <option value="{{ $permission_map . '_' . $model }}" {{$movie->hasPermission($permission_map . '_' . $model) ? 'selected' : ''}}>{{ $permission_map }}</option>
-                                      @endforeach
-                                  </select>
-                                  </td>
-                              </tr>
-                              @endforeach
-                          </tbody>
-                      </table>
-                  </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile shadow mb-4">
 
-                  <div class="form-group">
-                      <button type="submit" class="btn btn-primary"><i class="fa fa-edit"></i> Edit</button>
-                  </div>
-                <div>
-          </div>
-      </div>
+                <form id="movie__properties"
+                      method="post"
+                      action="{{ route('dashboard.movies.update', ['movie' => $movie->id, 'type' => 'update']) }}"
+                      enctype="multipart/form-data"
+                >
+                    @csrf
+                    @method('put')
+
+                    @include('dashboard.partials._errors')
+
+                    {{--name--}}
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" name="name" id="movie__name" value="{{ old('name', $movie->name) }}" class="form-control">
+                    </div>
+
+                    {{--description--}}
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" class="form-control">{{ old('description', $movie->description) }}</textarea>
+                    </div>
+
+                    {{--poster--}}
+                    <div class="form-group">
+                        <label>Poster</label>
+                        <input type="file" name="poster" class="form-control">
+                        <img src="{{ $movie->poster_path }}" style=" margin-top: 10px; width: 255px; height: 378px;" alt="">
+                    </div>
+
+                    {{--image--}}
+                    <div class="form-group">
+                        <label>Image</label>
+                        <input type="file" name="image" class="form-control">
+                        <img src="{{ $movie->image_path }}" style=" margin-top: 10px; width: 300px; height: 300;" alt="">
+                    </div>
+
+                    {{--categories--}}
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select name="categories[]" class="form-control select2" multiple>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}"
+                                        {{ in_array($category->id, $movie->categories->pluck('id')->toArray()) ? 'selected' : ''}}
+                                >
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    {{--year--}}
+                    <div class="form-group">
+                        <label>Year</label>
+                        <input type="text" name="year" value="{{ old('year', $movie->year) }}" class="form-control">
+                    </div>
+
+                    {{--rating--}}
+                    <div class="form-group">
+                        <label>Rating</label>
+                        <input type="number" min="1" name="rating" value="{{ old('rating', $movie->rating) }}" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-edit"></i> Edit</button>
+                    </div>
+
+                </form><!-- end of form -->
+
+            </div><!-- end of tile -->
+
+        </div><!-- end of col -->
+
+    </div><!-- end of row -->
+
 @endsection

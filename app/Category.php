@@ -12,6 +12,10 @@ class Category extends Model
         return ucfirst($value);
     }
 
+    public function movies(){
+        return $this->belongsToMany(Movie::class, 'movie_category');
+    }
+
     public function scopeWhenSearch($query, $search){
         return $query->when($search, function($q) use ($search){
             return $q->where('name', 'like', "%$search%");
