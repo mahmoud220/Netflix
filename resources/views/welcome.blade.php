@@ -1,100 +1,117 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
+@section('content')
+<section id="banner">
 
-        <title>Laravel</title>
+    @include('layouts._nav')
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+        <div class="movies owl-carousel owl-theme">
+            @foreach ($latest_movies as $latest_movie)
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
+            <div class="movie text-white d-flex justify-content-center align-items-center">
 
-            .full-height {
-                height: 100vh;
-            }
+                <div class="movie__bg" style="background: linear-gradient(rgba(0,0,0, 0.6), rgba(0,0,0, 0.6)), url({{$latest_movie->image_path}}) center/cover no-repeat;"></div>
 
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
+                <div class="container">
 
-            .position-ref {
-                position: relative;
-            }
+                    <div class="row">
 
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
+                        <div class="col-md-6">
 
-            .content {
-                text-align: center;
-            }
+                            <div class="d-flex justify-content-between">
+                                <h1 class="movie__name fw-300">{{ $latest_movie->name }}</h1>
+                                <span class="movie__year align-self-center">{{ $latest_movie->year }}</span>
+                            </div>
 
-            .title {
-                font-size: 84px;
-            }
+                            <div class="d-flex movie__rating my-1">
+                                <div class="d-flex">
+                                    @for ($i = 0; $i < $latest_movie->rating; $i++)
+                                        <span class="fas fa-star text-primary mr-2"></span>
+                                    @endfor
+                                </div>
+                                <span class="align-self-center">{{ $latest_movie->rating }}</span>
+                            </div>
 
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
+                            <p class="movie__description my-2">{{ $latest_movie->description }}</p>
 
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
+                            <div class="movie__cta my-4">
+                                <a href="show.html" class="btn btn-primary text-capitalize mr-0 mr-md-2"><span class="fas fa-play"></span> watch now</a>
+                                <a href="#" class="btn btn-outline-light text-capitalize"><span class="fas fa-heart"></span> add to favorite</a>
+                            </div>
+                        </div><!-- end of col -->
 
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth
+                        <div class="col-6 mt-2 mx-auto col-md-4 col-lg-3  ml-md-auto mr-md-0">
+                            <img src="{{ $latest_movie->poster_path }}" class="img-fluid" alt="">
+                        </div>
+                    </div><!-- end of row -->
+
+                </div><!-- end of container -->
+
+            </div><!-- end of movie -->
+
+            @endforeach
+
+        </div><!-- end of movies -->
+
+    </section><!-- end of banner section-->
+
+    @foreach ($categories as $category)
+
+    <section class="listing py-2">
+
+        <div class="container">
+
+            <div class="row my-4">
+                <div class="col-12 d-flex justify-content-between">
+                    <h3 class="listing__title text-white fw-300">{{ $category->name }}</h3>
+                    <a href="" class="align-self-center text-capitalize text-primary">see all</a>
                 </div>
-            @endif
+            </div><!-- end of row -->
 
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
+            <div class="movies owl-carousel owl-theme">
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://vapor.laravel.com">Vapor</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
-            </div>
-        </div>
-    </body>
-</html>
+                @foreach ($category->movies as $movie)
+
+                <div class="movie p-0">
+                    <img src="{{ $movie->poster_path }}" class="img-fluid" alt="">
+
+                    <div class="movie__details text-white">
+
+                        <div class="d-flex justify-content-between">
+                            <p class="mb-0 movie__name">{{ $movie->name }}</p>
+                            <p class="mb-0 movie__year align-self-center">{{ $movie->year }}</p>
+                        </div>
+
+                        <div class="d-flex movie__rating">
+                            <div class="mr-2">
+                                @for ($i = 0; $i < $movie->rating; $i++)
+                                <i class="fas fa-star text-primary mr-1"></i>
+                            @endfor
+                            </div>
+                            <span>{{ $movie->rating }}</span>
+                        </div>
+
+                        <div class="movie___views">
+                            <p>Views: {{ $movie->views }}</p>
+                        </div>
+
+                        <div class="d-flex movie__cta">
+                            <a href="" class="btn btn-primary text-capitalize flex-fill mr-2"><i class="fas fa-play"></i> watch now</a>
+                            <i class="far fa-heart fa-1x align-self-center movie__fav-button"></i>
+                        </div>
+
+                    </div><!-- end of movie details -->
+
+                </div><!-- end of col -->
+
+                @endforeach
+
+            </div><!-- end of row -->
+
+        </div><!-- end of container -->
+
+    </section><!-- end of listing section -->
+
+    @endforeach
+
+    @include('layouts._footer')
+@endsection

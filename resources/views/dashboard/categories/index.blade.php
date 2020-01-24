@@ -43,6 +43,7 @@
                     <tr>
                         <th>#</th>
                         <th>Name</th>
+                        <th>Movies Count</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -51,6 +52,7 @@
                     <tr>
                     <td>{{ $index+1 }}</td>
                     <td>{{ $category->name }}</td>
+                    <td>{{ $category->movies_count }}</td>
                     <td>
                         @if(auth()->user()->hasPermission('update_categories'))
                     <a href="{{ route('dashboard.categories.edit', $category->id) }}" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i> Edit</a>
