@@ -34,7 +34,7 @@
                             <p class="movie__description my-2">{{ $latest_movie->description }}</p>
 
                             <div class="movie__cta my-4">
-                                <a href="show.html" class="btn btn-primary text-capitalize mr-0 mr-md-2"><span class="fas fa-play"></span> watch now</a>
+                            <a href="{{ route('movies.show', $latest_movie->id) }}" class="btn btn-primary text-capitalize mr-0 mr-md-2"><span class="fas fa-play"></span> watch now</a>
                                 <a href="#" class="btn btn-outline-light text-capitalize"><span class="fas fa-heart"></span> add to favorite</a>
                             </div>
                         </div><!-- end of col -->
@@ -95,7 +95,7 @@
                         </div>
 
                         <div class="d-flex movie__cta">
-                            <a href="" class="btn btn-primary text-capitalize flex-fill mr-2"><i class="fas fa-play"></i> watch now</a>
+                            <a href="{{ route('movies.show', $movie->id) }}" class="btn btn-primary text-capitalize flex-fill mr-2"><i class="fas fa-play"></i> watch now</a>
                             <i class="far fa-heart fa-1x align-self-center movie__fav-button"></i>
                         </div>
 

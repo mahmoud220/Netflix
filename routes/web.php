@@ -15,6 +15,10 @@ Route::get('/', 'WelcomeController@index')->name('welcome');
 
 Auth::routes();
 
+Route::resource('movies', 'MovieController')->only(['index', 'show']);
+Route::post('/movies/{movie}/increment_views', 'MovieController@increment_views')->name('movies.increment_views');
+
+
 //Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('login/{provider}', 'Auth\LoginController@redirectToProvider')->where('provider', 'facebook|google');
