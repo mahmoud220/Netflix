@@ -7,7 +7,20 @@ use Illuminate\Http\Request;
 
 class MovieController extends Controller
 {
-    public function index(){
+    public function index()
+    {
+
+        if (request()->ajax()) {
+            $movies = Movie::whenSearch(request()->search)->get();
+            return $movies;
+        }
+
+        $movies = Movie::whenCategory(request()->category_name)
+            ->whenSearch(request()->search)
+            ->whenFavorite(request()->favorite)
+            ->paginate(20);
+
+        return view('movies.index', compact('movies'));
 
     }
 
@@ -25,4 +38,10 @@ class MovieController extends Controller
         $movie->increment('views');
 
     }// end of increment_views
+
+    public function toggle_favorite(Movie $movie)
+    {
+        $movie->is_favored ? $movie->users()->detach(auth()->user()->id) : $movie->users()->attach(auth()->user()->id);
+
+    }
 }

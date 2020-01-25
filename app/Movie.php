@@ -9,11 +9,21 @@ class Movie extends Model
 {
     protected $fillable = ['name','description','poster','image', 'path', 'year', 'rating', 'percent'];
 
-    protected $appends = ['poster_path', 'image_path'];
+    protected $appends = ['poster_path', 'image_path', 'is_favored'];
 
     public function getPosterPathAttribute()
     {
         return Storage::url('images/' . $this->poster);
+
+    }
+
+    public function getIsFavoredAttribute()
+    {
+        if (auth()->user()) {
+            return (bool)$this->users()->where('user_id', auth()->user()->id)->count();
+        }
+
+        return false;
 
     }
 
@@ -43,6 +53,19 @@ class Movie extends Model
 
     }
 
+    public function scopeWhenFavorite($query, $favorite)
+    {
+        return $query->when($favorite, function ($q) {
+
+            return $q->whereHas('users', function ($qu) {
+
+                return $qu->where('user_id', auth()->user()->id);
+            });
+
+        });
+
+    }
+
     public function getImagePathAttribute()
     {
         return Storage::url('images/' . $this->image);
@@ -52,6 +75,12 @@ class Movie extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'movie_category');
+
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_movie');
 
     }
 }

@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name', 'email', 'password',
     ];
 
+    protected $withCount = ['movies'];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -66,5 +68,11 @@ class User extends Authenticatable
         return $query->when($role_id, function($q) use ($role_id){
             return $this->scopeWhereRole($q, $role_id);
         });
+    }
+
+    public function movies()
+    {
+        return $this->belongsToMany(Movie::class, 'user_movie');
+
     }
 }

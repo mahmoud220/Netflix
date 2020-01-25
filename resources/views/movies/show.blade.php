@@ -36,7 +36,18 @@
                         {{ $movie->description }}
                     </p>
 
-                    <a href="" class="btn btn-primary text-capitalize my-3"><i class="far fa-heart"></i> add to favorites</a>
+                    @auth
+                    <a href="#" class="btn btn-primary text-capitalize movie__fav-btn">
+                                    <span class="far fa-heart movie__fav-icon movie-{{ $movie->id }} {{ $movie->is_favored ? 'fw-900' : '' }}"
+                                          data-movie-id="{{ $movie->id }}"
+                                          data-url="{{ route('movies.toggle_favorite', $movie->id) }}"
+                                    >
+                                    </span>
+                        add to favorite
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="btn btn-primary text-capitalize my-3"><i class="far fa-heart"></i> add to favorites</a>
+                @endauth
 
                 </div><!-- end of col -->
 
@@ -89,9 +100,15 @@
                         <div class="d-flex movie__cta">
                             <a href="{{ route('movies.show', $related_movie->id) }}" class="btn btn-primary text-capitalize flex-fill mr-2"><i class="fas fa-play"></i> watch now</a>
 
-                                <i class="far fa-heart fa-1x align-self-center movie__fav-button"></i>
-
-                                {{-- <a href="{{ route('login') }}" class="text-white align-self-center"><i class="far fa-heart fa-1x align-self-center movie__fav-icon"></i></a> --}}
+                            @auth
+                            <i class="far fa-heart {{ $related_movie->is_favored ? 'fw-900' : ''}} fa-1x align-self-center movie__fav-icon movie-{{ $related_movie->id }}"
+                               data-movie-id="{{ $related_movie->id }}"
+                               data-url="{{ route('movies.toggle_favorite', $related_movie->id) }}"
+                            >
+                            </i>
+                        @else
+                            <a href="{{ route('login') }}" class="text-white align-self-center"><i class="far fa-heart fa-1x align-self-center movie__fav-icon"></i></a>
+                        @endauth
                         </div>
                     </div><!-- end of movie details -->
 

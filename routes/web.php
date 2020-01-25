@@ -17,6 +17,7 @@ Auth::routes();
 
 Route::resource('movies', 'MovieController')->only(['index', 'show']);
 Route::post('/movies/{movie}/increment_views', 'MovieController@increment_views')->name('movies.increment_views');
+Route::post('/movies/{movie}/toggle_favorite', 'MovieController@toggle_favorite')->name('movies.toggle_favorite');
 
 
 //Route::get('/home', 'HomeController@index')->name('home');

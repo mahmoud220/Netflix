@@ -23,6 +23,26 @@
 
     <!--main styles -->
     <link rel="stylesheet" href="{{ asset('css/main.min.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('plugins/easyautocomplete/easy-autocomplete.min.css') }}">
+
+    <style>
+        .fw-900 {
+            font-weight: 900;
+        }
+
+        .easy-autocomplete {
+            width: 90%;
+        }
+
+        .easy-autocomplete input {
+            color: white !important;
+        }
+
+        .eac-icon-left .eac-item img {
+            max-height: 80px !important;
+        }
+    </style>
 </head>
 <body>
 
@@ -46,47 +66,73 @@
 {{--player js--}}
 <script src="{{ asset('js/playerjs.js') }}"></script>
 
+<script src="{{ asset('js/custom/movie.js') }}"></script>
+
+<script src="{{ asset('plugins/easyautocomplete/jquery.easy-autocomplete.min.js') }}"></script>
+
 <script>
 
-   $.ajaxSetup({
+    $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
 
-  $(document).ready(function () {
+    var options = {
+        url: function (search) {
+            return "/movies?search=" + search;
+        },
 
-    $("#banner .movies").owlCarousel({
-      loop: true,
-      nav: false,
-      items: 1,
-      dots: false,
-    });
+        getValue: "name",
 
-    $(".listing .movies").owlCarousel({
-      loop: true,
-      nav: false,
-      stagePadding: 50,
-      responsive: {
-        0: {
-          items: 1
+        template: {
+            type: 'iconLeft',
+            fields: {
+                iconSrc: "poster_path"
+            }
         },
-        600: {
-          items: 3
-        },
-        900: {
-          items: 3
-        },
-        1000: {
-          items: 4
+
+        list: {
+            onChooseEvent: function () {
+                var movie = $('.form-control[type="search"]').getSelectedItemData();
+                var url = window.location.origin + '/movies/' + movie.id;
+                window.location.replace(url);
+            }
         }
-      },
-      dots: false,
-      margin: 15,
-      loop: true,
-    });
+    };
 
-  });
+    $('.form-control[type="search"]').easyAutocomplete(options)
+
+    $(document).ready(function () {
+
+        $("#banner .movies").owlCarousel({
+            loop: true,
+            nav: false,
+            items: 1,
+            dots: false,
+        });
+
+        $(".listing .movies").owlCarousel({
+            loop: true,
+            nav: false,
+            stagePadding: 50,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                600: {
+                    items: 2
+                },
+                1000: {
+                    items: 4
+                }
+            },
+            dots: false,
+            margin: 15,
+            loop: true,
+        });
+
+    });
 </script>
 @stack('scripts')
 </body>
